@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthrohard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="Assets/Arthrohard.png" alt="Arthrohard" class="Arthrohard">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#">Co nas wyróżnia</a></li>
+            <li><a href="#">Skład</a></li>
+            <li><a href="#">Produkty</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="big-section" id="section1">
+        <img src="Assets/Group 18.png" alt="Arthrohard Product" class="Group-18">
+        <h1 class="big-logo">Arthrohard</h1>
+        <img src="Assets/Frame 92.png" alt="Frame 92" class="frame-92">
+        <img src="Assets/Frame 96.png" alt="Frame 96" class="frame-96">
+        <img src="Assets/Frame 106.png" alt="Frame 106" class="frame-106">
+        <img src="Assets/Frame 127.png" alt="Frame 127" class="frame-127">
+    </section>
+
+    <section class="big-section" id="section2">
+        <img src="Assets/Frame 128.png" alt="Frame 128" class="frame-128">
+        <img src="Assets/Frame 139.png" alt="Frame 139" class="frame-139">
+        <img src="Assets/Group 16.png" alt="Group 16" class="Group-16">
+        <img src="Assets/piesek 1.png" alt="piesek 1" class="piesek-1">
+        <img src="Assets/Frame 129.png" alt="Frame 129" class="frame-129">
+        <img src="Assets/Frame 130.png" alt="Frame 130" class="frame-130">
+        <img src="Assets/Frame 131.png" alt="Frame 131" class="frame-131">
+        <img src="Assets/Frame 132.png" alt="Frame 132" class="frame-132">
+        <img src="Assets/Frame 133.png" alt="Frame 133" class="frame-133">
+        <img src="Assets/Frame 134.png" alt="Frame 134" class="frame-134">
+
+    </section>
+
+    <section class="big-section" id="products-section">
+
+        <div class="controls">
+            <label for="pageSize">Ilość elementów na stronie:</label>
+            <select id="pageSize">
+                <option value="8">8</option>
+                <option value="16" selected>16</option>
+                <option value="20">20</option>
+            </select>
+            
+            <label for="enableScroll">
+                <input type="checkbox" id="enableScroll">Infinite
+            </label>
+        </div>
+
+        <div id="products-container"></div>
+
+        <div class="loader">Ładowanie...</div>
+
+        <!-- Popup -->
+        <div class="overlay"></div>
+        <div class="popup">
+            <span class="close">✖</span>
+            <h2 id="popup-title"></h2>
+            <p id="popup-description"></p>
+        </div>
+    </section>
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
