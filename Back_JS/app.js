@@ -52,6 +52,60 @@ app.get('/orders', basicAuth, (req, res) => {
     res.json(filtered);
 });
 
+
+app.get('/orders/csv', basicAuth, (_, res) => {
+    const orders = loadOrders();
+    if (!orders.length) {
+        console.log("❌ Brak zamówień w db.json");
+        return res.status(404).json({ error: 'No orders found' });
+    }
+
+    const records = [];
+
+    orders.forEach(order => {
+        const base = {
+            orderID: order.orderID,
+            orderWorth: order.orderWorth
+        };
+
+        const products = order.products || [];
+        if (products.length) {
+            products.forEach(p => {
+                records.push({
+                    ...base,
+                    productID: p.productID,
+                    quantity: p.quantity
+                });
+            });
+        } else {
+            records.push({
+                ...base,
+                productID: 'N/A',
+                quantity: 0
+            });
+        }
+    });
+
+    const writer = csv({
+        path: 'orders.csv',
+        header: [
+            { id: 'orderID', title: 'Order ID' },
+            { id: 'productID', title: 'Product ID' },
+            { id: 'quantity', title: 'Quantity' },
+            { id: 'orderWorth', title: 'Order Worth' }
+        ]
+    });
+
+    writer.writeRecords(records).then(() => {
+        console.log("✅ Eksport zakończony. Wysyłanie pliku...");
+        res.download('orders.csv');
+    }).catch(err => {
+        console.error('❌ Błąd eksportu CSV:', err);
+        res.status(500).json({ error: 'CSV export failed' });
+    });
+});
+
+
 app.get('/orders/:id', basicAuth, (req, res) => {
     const orders = loadOrders();
     const order = orders.find(o => String(o.orderID) === req.params.id);
@@ -62,79 +116,8 @@ app.get('/orders/:id', basicAuth, (req, res) => {
     }
 });
 
-app.get('/orders/csv', basicAuth, (req, res) => {
-    const orders = loadOrders();
-    if (!orders.length) return res.status(404).json({ error: 'No orders found' });
 
-    const records = [];
 
-    orders.forEach(order => {
-        const baseData = {
-            orderID: order.orderID,
-            serialNumber: order.orderSerialNumber || 'N/A',
-            status: order.orderStatus || 'N/A',
-            changeDate: order.orderChangeDate || 'N/A',
-            purchaseDate: order.purchaseDate || 'N/A',
-            worth: order.orderWorth || 0,
-            currency: order.currency || 'N/A',
-            paymentType: order.paymentType || 'N/A',
-            deliveryMethod: order.deliveryMethod || 'N/A',
-            clientName: (order.client?.clientName || 'N/A'),
-            clientEmail: (order.client?.clientEmail || 'N/A'),
-            clientPhone: (order.client?.clientPhone || 'N/A')
-        };
-
-        const products = order.products || [];
-        if (products.length) {
-            products.forEach(p => {
-                records.push({
-                    ...baseData,
-                    productID: p.productID || 'N/A',
-                    productName: p.productName || 'Unknown Product',
-                    quantity: p.quantity || 0,
-                    productPrice: p.productPrice || 0
-                });
-            });
-        } else {
-            records.push({
-                ...baseData,
-                productID: 'N/A',
-                productName: 'No Products',
-                quantity: 0,
-                productPrice: 0
-            });
-        }
-    });
-
-    const writer = csv({
-        path: 'orders.csv',
-        header: [
-            { id: 'orderID', title: 'Order ID' },
-            { id: 'serialNumber', title: 'Serial Number' },
-            { id: 'status', title: 'Order Status' },
-            { id: 'changeDate', title: 'Change Date' },
-            { id: 'purchaseDate', title: 'Purchase Date' },
-            { id: 'worth', title: 'Order Worth' },
-            { id: 'currency', title: 'Currency' },
-            { id: 'paymentType', title: 'Payment Type' },
-            { id: 'deliveryMethod', title: 'Delivery Method' },
-            { id: 'clientName', title: 'Client Name' },
-            { id: 'clientEmail', title: 'Client Email' },
-            { id: 'clientPhone', title: 'Client Phone' },
-            { id: 'productID', title: 'Product ID' },
-            { id: 'productName', title: 'Product Name' },
-            { id: 'quantity', title: 'Quantity' },
-            { id: 'productPrice', title: 'Product Price' }
-        ]
-    });
-
-    writer.writeRecords(records).then(() => {
-        res.download('orders.csv');
-    }).catch(err => {
-        console.error('CSV export error:', err);
-        res.status(500).json({ error: 'CSV export failed' });
-    });
-});
 
 // Harmonogram uruchamiania fetch_orders co 24h
 schedule.scheduleJob('0 0 * * *', () => {
@@ -146,5 +129,16 @@ schedule.scheduleJob('0 0 * * *', () => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
+
+      //Automatyczne pobranie zamówień przy starcie
+      console.log("Fetching orders on startup...");
+      exec("node fetch_orders.js", (err, stdout, stderr) => {
+          if (err) {
+              console.error("Initial fetch failed:", stderr);
+          } else {
+              console.log("Orders fetched on startup.");
+          }
+      });
+  
 });
