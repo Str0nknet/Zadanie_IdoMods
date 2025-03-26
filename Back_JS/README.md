@@ -109,36 +109,3 @@ bash
 node fetch_orders.js
 
 
-------------------------------------------------
-
-##Struktura db.json
-
-Przykładowy obiekt zamówienia:
-
-json
-{
-  "orderID": "aaaaa-1",
-  "orderSerialNumber": 11,
-  "orderStatus": "canceled",
-  "orderChangeDate": "2022-06-01 22:32:45",
-  "purchaseDate": "2021-09-14",
-  "orderWorth": 64,
-  "currency": "PLN",
-  "paymentType": "cash_on_delivery",
-  "deliveryMethod": "Odbiór osobisty",
-  "client": {
-    "clientName": "Jan Kowalski",
-    "clientEmail": "jan.kowalski@email.com",
-    "clientPhone": "123456789"
-  },
-  "products": [
-    {
-      "productID": "1001",
-      "productName": "Karma dla psa",
-      "quantity": 2,
-      "productPrice": 99.50
-    }
-  ]
-}
-
-
