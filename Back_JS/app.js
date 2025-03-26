@@ -56,7 +56,7 @@ app.get('/orders', basicAuth, (req, res) => {
 app.get('/orders/csv', basicAuth, (_, res) => {
     const orders = loadOrders();
     if (!orders.length) {
-        console.log("❌ Brak zamówień w db.json");
+        console.log("Brak zamówień w db.json");
         return res.status(404).json({ error: 'No orders found' });
     }
 
@@ -97,10 +97,10 @@ app.get('/orders/csv', basicAuth, (_, res) => {
     });
 
     writer.writeRecords(records).then(() => {
-        console.log("✅ Eksport zakończony. Wysyłanie pliku...");
+        console.log("Eksport zakończony. Wysyłanie pliku...");
         res.download('orders.csv');
     }).catch(err => {
-        console.error('❌ Błąd eksportu CSV:', err);
+        console.error('Błąd eksportu CSV:', err);
         res.status(500).json({ error: 'CSV export failed' });
     });
 });
@@ -131,7 +131,6 @@ schedule.scheduleJob('0 0 * * *', () => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 
-      //Automatyczne pobranie zamówień przy starcie
       console.log("Fetching orders on startup...");
       exec("node fetch_orders.js", (err, stdout, stderr) => {
           if (err) {
