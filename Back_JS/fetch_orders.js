@@ -3,7 +3,7 @@ const fs = require("fs");
 //const { format } = require("date-fns");
 
 const API_URL = "https://zooart6.yourtechnicaldomain.com/api/admin/v5/orders/orders";
-const API_KEY = "YXBwbGljYXRpb24xNjpYeHI1K0MrNVRaOXBaY2lEcnpiQzBETUZROUxrRzFFYXZuMkx2L0RHRXZRdXNkcmF5R0Y3ZnhDMW1nejlmVmZP";
+const API_KEY = "PUT_IN";
 
 //const startDate = format(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), "yyyy-MM-dd");
 
